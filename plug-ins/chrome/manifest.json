@@ -1,0 +1,13 @@
+{
+  // Required
+  "name": "Netflix Virtual Theater",
+  "version": "0.1.1",
+
+  "content_scripts": [
+      {
+          "matches" : [ "http://www.netflix.com/*"],
+      	  "css" : ["virtual_theater.css"],
+          "js" : ["mootools-1.2.3-core-nc.js", "virtual_theater.js"] 
+      }
+  ]
+}
