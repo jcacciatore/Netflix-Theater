@@ -1,0 +1,22 @@
+<!DOCTYPE "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+    <head>
+        <title>#{get 'title' /}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?3.2.0/build/cssreset/reset-min.css&3.2.0/build/cssfonts/fonts-min.css&3.2.0/build/cssgrids/grids-min.css">        
+        <link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/main.css'}">
+        #{get 'moreStyles' /}
+        <link rel="shortcut icon" href="http://cdn-0.nflximg.com/us/icons/nficon.ico">
+        <script src="http://yui.yahooapis.com/3.2.0/build/yui/yui-min.js"></script>        
+        #{get 'moreScripts' /}
+    </head>
+    <body>
+        <div id="appbody" class="yui3-g">
+            <div id="header" class="yui3-u-1">
+                <img src="@{'/public/images/nflogo.png'}"> <span id="mainheading">Theater</span>
+            </div>
+            #{doLayout /}
+        </div>
+    </body>
+</html>

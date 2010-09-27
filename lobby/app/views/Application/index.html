@@ -1,0 +1,10 @@
+#{extends 'main.html' /}
+#{set title:'Netflix Theater - Sign In' /}
+
+#{if !loggedIn}
+<div class="yui3-u-1">
+    <form action="@{Application.authorize}">
+        <input type="submit" value="Authorize">
+    </form>
+</div>
+#{/if}

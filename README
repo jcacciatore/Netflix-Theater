@@ -1,0 +1,6 @@
+This is our entry for the 2010 San Francisco TechCrunch Disrupt Hack Day. A virtual theater "lobby" where 
+users can congregate and pick movies they want to watch together.
+
+The code is broken into two pieces, the lobby and a message bus. The lobby is written in Java using the 
+Play framework (http://playframework.org) and the message bus is a simple WebSocket server written using 
+node.js (http://nodejs.org).

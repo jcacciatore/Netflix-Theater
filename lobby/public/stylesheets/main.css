@@ -1,0 +1,57 @@
+body {
+    background-color: #B9090B;
+}
+
+#mainheading {
+    margin-left: 10px;
+    color: #FFFFFF;
+    font-size: xx-large;
+    vertical-align: top;
+}
+
+#header {
+    background-color: #B9090B;
+    padding: 5px 5px 5px 5px;
+}
+
+#search {
+    font-size: x-large;
+    padding: 5px 5px 5px 5px;
+    text-align: center;
+}
+
+#appbody {
+    background-color: #FFFFFF;
+    margin: auto;
+    width: 960px;    
+}
+
+.theater {
+    clear: right;
+    float: left;
+    width: 300px;
+    height: 150px;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: left;
+    font-size: large;
+}
+
+.theaterimage {
+    float: left;
+    margin-right: 5px;
+}
+
+#footer {
+    padding-top: 50px;
+    clear: both;
+}
+
+.activeplaybutton {
+    visibility: visible;
+}
+
+.inactiveplaybutton {
+    visibility: hidden;
+}

@@ -1,0 +1,115 @@
+#{extends 'main.html' /}
+#{set title:'Netflix Theater - Lobby' /}
+#{set 'moreScripts'}
+<script type="text/javascript">
+var theater_id = null;
+var theaters = {};
+var user = "${user.userInfo.nickname}";
+
+YUI().use("node-base", function(Y) {
+    Y.on("domready", function() {
+        var conn = new WebSocket("ws://hydrogen.slicehost.unclehulka.com:7001/");
+        conn.onmessage = function(evt) {
+            var req = JSON.parse(evt.data);
+            if (req.type == "lobby-participant-query") {
+                if (theater_id != null) {
+                    conn.send(JSON.stringify({
+                        type: "lobby-participant-response",
+                        theater_id: theater_id
+                    }));
+                }
+            } else if (req.type == "lobby-participant-join") {
+                if (!theaters.hasOwnProperty(req.theater_id)) {
+                    theaters[req.theater_id] = 0;
+                }
+                theaters[req.theater_id]++;
+                Y.one("#" + req.theater_id).setContent(theaters[req.theater_id]);
+            } else if (req.type == "lobby-participant-leave") {
+                if (!theaters.hasOwnProperty(req.theater_id)) {
+                    theaters[req.theater_id] = 0;
+                }
+                if (theaters[req.theater_id] > 0) {
+                    theaters[req.theater_id]--;
+                }
+                Y.one("#" + req.theater_id).setContent(theaters[req.theater_id]);
+            } else if (req.type == "lobby-participant-response") {
+                console.log("not handling lobby-participant-response");
+            } else if (req.type == "lobby-play" && req.theater_id == theater_id) {
+                document.location.href = Y.one("#" + theater_id + "Link").get("href") + "&theater-id=" + theater_id + "&user-id=" + user;
+            }
+        };
+
+        conn.onclose = function(evt) {
+            console.log("closed");
+        };
+
+        conn.onopen = function(evt) {
+            console.log("opened");
+            conn.send(JSON.stringify({
+                type: "lobby-participant-query"
+            }));
+        };
+
+        conn.onerror = function(evt) {
+            console.log("error");
+        };
+
+        Y.on("click", function(e) {
+            if (theater_id != null) {
+                conn.send(JSON.stringify({
+                    type: "lobby-participant-leave",
+                    user: user,
+                    theater_id: theater_id
+                }));
+                theater_id = null;
+            }
+
+            if (e.target.get("value") == "Join") {
+                var target_id = e.target.get("id");
+                var theater = target_id.substring(0, target_id.indexOf("-"));
+                theater_id = theater;
+                conn.send(JSON.stringify({
+                    type: "lobby-participant-join",
+                    user: user,
+                    theater_id: theater_id
+                }));
+                Y.all(".joinbutton").set("value", "Join");
+                Y.all(".activeplaybutton").replaceClass("activeplaybutton", "inactiveplaybutton");
+                e.target.set("value", "Leave");
+                Y.one("#" + theater_id + "Play").replaceClass("inactiveplaybutton", "activeplaybutton");
+            } else if (e.target.get("value") == "Leave") {
+                e.target.set("value", "Join");
+                Y.all(".activeplaybutton").replaceClass("activeplaybutton", "inactiveplaybutton");
+            }
+
+        }, ".joinbutton");
+
+        Y.on("click", function(e) {
+            conn.send(JSON.stringify({
+                type: "lobby-play",
+                theater_id: theater_id
+            }));
+        }, ".activeplaybutton");
+    });
+});
+</script>
+#{/set}
+
+<div class="yui3-u-1" id="search">
+    <form action="@{Application.add}" method="post">
+        Theater Name: <input id="addquery" type="text" name="query"> <input type="submit" value="Add Theater">
+    </form>
+</div>
+
+<div class="yui3-u-1" id="main">
+#{list items:lobby.theaters, as:'theater'}
+    <div class="theater">
+        <a href="${theater.theater.link}" id="${theater.id}Link"><img src="${theater.theater.previewImageUrl}" title="${theater.theater.name}" class="theaterimage"></a>
+        <span>${theater.theater.name}<br><span id="${theater.id}">0</span> participants<br><form><input type="button" id="${theater.id}-Join" value="Join" class="joinbutton"><br><input type="button" id="${theater.id}Play" value="Play" class="inactiveplaybutton"></form></span>
+    </div>
+#{/list}
+</div>
+
+<div class="yui3-u-1" id="footer">
+    &copy; 2010
+</div>
