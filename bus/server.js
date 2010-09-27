@@ -1,5 +1,3 @@
-#!/home/rckenned/local/bin/node
-
 var sys = require("sys"),
     ws = require("websocket-server");
 
